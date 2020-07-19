@@ -40,6 +40,7 @@ func NewRootCmd() *cobra.Command {
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 
 	rootCmd.AddCommand(NewTableRowsCmd())
+	rootCmd.AddCommand(NewDbBackupCmd())
 	rootCmd.AddCommand(NewVersionCmd())
 
 	return rootCmd
