@@ -22,8 +22,6 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/spf13/viper"
-
 	"github.com/tkuchiki/isu/exec"
 
 	"github.com/spf13/cobra"
@@ -119,8 +117,6 @@ func NewDbBackupCmd() *cobra.Command {
 	dbBackupCmd.Flags().IntP("dbport", "", 3306, "Database port")
 	dbBackupCmd.Flags().DurationP("timeout", "", time.Minute*10, "Timeout")
 	dbBackupCmd.Flags().BoolP("compress", "c", false, "Compress file with gzip command")
-
-	viper.AutomaticEnv()
 
 	return dbBackupCmd
 }
