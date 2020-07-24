@@ -22,7 +22,7 @@ import (
 )
 
 func NewVersionCmd() *cobra.Command {
-	version := "v0.0.3"
+	version := "v0.0.4"
 	// versionCmd represents the version command
 	var versionCmd = &cobra.Command{
 		Use:   "version",
