@@ -87,7 +87,7 @@ func (c *Client) execute(_sql string, args ...interface{}) ([]Columns, error) {
 	return data, nil
 }
 
-func (c *Client) TableRows(table, sort string, reverse bool) ([][]string, error) {
+func (c *Client) TableRows(dbname, sort string, reverse bool) ([][]string, error) {
 	baseSql := "SELECT table_name, table_rows FROM `information_schema`.`TABLES` WHERE table_schema = ? ORDER BY %s %s"
 	orderBy := "ASC"
 	if reverse {
@@ -95,7 +95,7 @@ func (c *Client) TableRows(table, sort string, reverse bool) ([][]string, error)
 	}
 	_sql := fmt.Sprintf(baseSql, sort, orderBy)
 
-	cols, err := c.execute(_sql, table)
+	cols, err := c.execute(_sql, dbname)
 	if err != nil {
 		return [][]string{}, err
 	}
@@ -103,6 +103,27 @@ func (c *Client) TableRows(table, sort string, reverse bool) ([][]string, error)
 	data := make([][]string, 0)
 	for _, col := range cols {
 		data = append(data, []string{col["TABLE_NAME"], col["TABLE_ROWS"]})
+	}
+
+	return data, nil
+}
+
+func (c *Client) GetTables(dbname string, reverse bool) ([]string, error) {
+	baseSql := "SELECT table_name FROM `information_schema`.`TABLES` WHERE table_schema = ? ORDER BY table_name %s"
+	orderBy := "ASC"
+	if reverse {
+		orderBy = "DESC"
+	}
+	_sql := fmt.Sprintf(baseSql, orderBy)
+
+	cols, err := c.execute(_sql, dbname)
+	if err != nil {
+		return []string{}, err
+	}
+
+	data := make([]string, 0)
+	for _, col := range cols {
+		data = append(data, col["TABLE_NAME"])
 	}
 
 	return data, nil
