@@ -43,6 +43,7 @@ func NewRootCmd() *cobra.Command {
 	rootCmd.AddCommand(NewDbBackupCmd())
 	rootCmd.AddCommand(NewCodeBackupCmd())
 	rootCmd.AddCommand(NewShowIndexesCmd())
+	rootCmd.AddCommand(NewExplainQueryCmd())
 	rootCmd.AddCommand(NewVersionCmd())
 
 	return rootCmd

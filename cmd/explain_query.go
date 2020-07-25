@@ -18,21 +18,21 @@ package cmd
 import (
 	"context"
 	"fmt"
+	"io/ioutil"
 	"os"
 	"time"
 
-	"github.com/tkuchiki/isu/db"
 	"github.com/tkuchiki/isu/exec"
 
 	"github.com/spf13/cobra"
 )
 
-func NewShowIndexesCmd() *cobra.Command {
-	// showIndexesCmd represents the show_indexes command
-	var showIndexesCmd = &cobra.Command{
-		Use:   "show_indexes",
-		Short: "Show indexes for all tables.",
-		Long: `Show indexes for all tables.
+func NewExplainQueryCmd() *cobra.Command {
+	// explainQueryCmd represents the explain_query command
+	var explainQueryCmd = &cobra.Command{
+		Use:   "explain_query",
+		Short: "Execute the EXPLAIN and EXPLAIN ANALYZE.",
+		Long: `Execute the EXPLAIN and EXPLAIN ANALYZE.
 
 Only support MySQL`,
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -71,15 +71,16 @@ Only support MySQL`,
 				return err
 			}
 
-			reverse, err := cmd.Flags().GetBool("reverse")
+			query, err := cmd.Flags().GetString("query")
 			if err != nil {
 				return err
 			}
-
-			dbcli, err := db.New(dbuser, dbpass, dbhost, dbname, dbsock, dbport)
-			tables, err := dbcli.GetTables(dbname, reverse)
-			if err != nil {
-				return err
+			if query == "" {
+				b, err := ioutil.ReadAll(os.Stdin)
+				if err != nil {
+					return err
+				}
+				query = string(b)
 			}
 
 			timeout, err := cmd.Flags().GetDuration("timeout")
@@ -98,32 +99,32 @@ Only support MySQL`,
 			ctx, cancel := context.WithTimeout(context.Background(), timeout)
 			defer cancel()
 
-			for _, table := range tables {
-				out, err := exec.CommandOutput(ctx, fmt.Sprintf(command+" -e 'SHOW INDEXES FROM `%s`'", table))
-				if err != nil {
-					return err
-				}
-
-				if out == "" {
-					continue
-				}
-
-				fmt.Println("##", table)
-				fmt.Println(out)
+			explain, err := exec.CommandOutput(ctx, fmt.Sprintf(command+" -e 'EXPLAIN %s\\G'", query))
+			if err != nil {
+				return err
 			}
+
+			analyze, err := exec.CommandOutput(ctx, fmt.Sprintf(command+" -e 'EXPLAIN ANALYZE %s'", query))
+			if err != nil {
+				return err
+			}
+
+			fmt.Println(query)
+			fmt.Println(explain)
+			fmt.Println(analyze)
 
 			return err
 		},
 	}
 
-	showIndexesCmd.Flags().StringP("dbuser", "", "root", "Database user")
-	showIndexesCmd.Flags().StringP("dbpass", "", "", "Database password")
-	showIndexesCmd.Flags().StringP("dbhost", "", "127.0.0.1", "Database host")
-	showIndexesCmd.Flags().StringP("dbname", "", "", "Database name")
-	showIndexesCmd.Flags().StringP("dbsock", "", "", "Database socket")
-	showIndexesCmd.Flags().IntP("dbport", "", 3306, "Database port")
-	showIndexesCmd.Flags().BoolP("reverse", "r", false, "Sort results in reverse order")
-	showIndexesCmd.Flags().DurationP("timeout", "", time.Minute*10, "Timeout")
+	explainQueryCmd.Flags().StringP("dbuser", "", "root", "Database user")
+	explainQueryCmd.Flags().StringP("dbpass", "", "", "Database password")
+	explainQueryCmd.Flags().StringP("dbhost", "", "127.0.0.1", "Database host")
+	explainQueryCmd.Flags().StringP("dbname", "", "", "Database name")
+	explainQueryCmd.Flags().StringP("dbsock", "", "", "Database socket")
+	explainQueryCmd.Flags().IntP("dbport", "", 3306, "Database port")
+	explainQueryCmd.Flags().StringP("query", "", "", "SQL")
+	explainQueryCmd.Flags().DurationP("timeout", "", time.Minute*10, "Timeout")
 
-	return showIndexesCmd
+	return explainQueryCmd
 }
