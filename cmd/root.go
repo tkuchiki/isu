@@ -44,6 +44,7 @@ func NewRootCmd() *cobra.Command {
 	rootCmd.AddCommand(NewCodeBackupCmd())
 	rootCmd.AddCommand(NewShowIndexesCmd())
 	rootCmd.AddCommand(NewExplainQueryCmd())
+	rootCmd.AddCommand(NewSlowlogCmd())
 	rootCmd.AddCommand(NewVersionCmd())
 
 	return rootCmd
