@@ -3,6 +3,8 @@ package db
 import (
 	"database/sql"
 	"fmt"
+	"path/filepath"
+	"strings"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/iancoleman/strcase"
@@ -21,13 +23,18 @@ func New(dbuser, dbpass, dbhost, dbname, socket string, port int) (*Client, erro
 		conn = fmt.Sprintf("tcp(%s:%d)", dbhost, port)
 	}
 
-	s, err := sql.Open("mysql", fmt.Sprintf("%s@%s/%s", userpass, conn, dbname))
+	if dbname == "" {
+		dbname = "mysql"
+	}
+
+	_db, err := sql.Open("mysql", fmt.Sprintf("%s@%s/%s", userpass, conn, dbname))
+
 	if err != nil {
 		return nil, err
 	}
 
 	return &Client{
-		db: s,
+		db: _db,
 	}, nil
 }
 
@@ -127,6 +134,56 @@ func (c *Client) GetTables(dbname string, reverse bool) ([]string, error) {
 	}
 
 	return data, nil
+}
+
+func (c *Client) GetVariable(name string) (string, error) {
+	_sql := fmt.Sprintf("SHOW VARIABLES LIKE '%s'", name)
+
+	cols, err := c.execute(_sql)
+	if err != nil {
+		return "", err
+	}
+
+	return cols[0]["Value"], nil
+}
+
+func (c *Client) SlowlogOn(datadir string, longQueryTime float64, persist bool) error {
+	set := "SET GLOBAL"
+	if persist {
+		set = "SET PERSIST"
+	}
+
+	_, err := c.execute(set + " slow_query_log=1")
+	if err != nil {
+		return err
+	}
+
+	slowlogPath := filepath.Join(strings.TrimRight(datadir, "/"), "slow.log")
+	_, err = c.execute(fmt.Sprintf(set+` slow_query_log_file="%s"`, slowlogPath))
+	if err != nil {
+		return err
+	}
+
+	_, err = c.execute(fmt.Sprintf(set+` long_query_time=%s`, fmt.Sprint(longQueryTime)))
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (c *Client) SlowlogOff(persist bool) error {
+	set := "SET GLOBAL"
+	if persist {
+		set = "SET PERSIST"
+	}
+
+	_, err := c.execute(set + " slow_query_log=0")
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (c *Client) Close() {

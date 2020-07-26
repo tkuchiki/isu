@@ -77,6 +77,11 @@ Only support MySQL`,
 			}
 
 			dbcli, err := db.New(dbuser, dbpass, dbhost, dbname, dbsock, dbport)
+			if err != nil {
+				return err
+			}
+			defer dbcli.Close()
+
 			tables, err := dbcli.GetTables(dbname, reverse)
 			if err != nil {
 				return err
