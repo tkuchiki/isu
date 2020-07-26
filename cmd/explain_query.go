@@ -20,6 +20,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/tkuchiki/isu/exec"
@@ -83,6 +84,8 @@ Only support MySQL`,
 				query = string(b)
 			}
 
+			query = strings.ReplaceAll(strings.TrimRight(query, ";"), `""`, `\"`)
+
 			timeout, err := cmd.Flags().GetDuration("timeout")
 			if err != nil {
 				return err
@@ -99,12 +102,12 @@ Only support MySQL`,
 			ctx, cancel := context.WithTimeout(context.Background(), timeout)
 			defer cancel()
 
-			explain, err := exec.CommandOutput(ctx, fmt.Sprintf(command+" -e 'EXPLAIN %s\\G'", query))
+			explain, err := exec.CommandOutput(ctx, fmt.Sprintf(command+" -e \"EXPLAIN %s\\G\"", query))
 			if err != nil {
 				return err
 			}
 
-			analyze, err := exec.CommandOutput(ctx, fmt.Sprintf(command+" -e 'EXPLAIN ANALYZE %s'", query))
+			analyze, err := exec.CommandOutput(ctx, fmt.Sprintf(command+" -e \"EXPLAIN ANALYZE %s\"", query))
 			if err != nil {
 				return err
 			}

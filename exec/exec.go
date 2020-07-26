@@ -12,7 +12,11 @@ func Command(ctx context.Context, cmd string) error {
 
 func CommandOutput(ctx context.Context, cmd string) (string, error) {
 	out, err := exe.CommandContext(ctx, "sh", "-c", cmd).CombinedOutput()
-	return string(out), err
+	if err != nil {
+		return "", fmt.Errorf(string(out))
+	}
+
+	return string(out), nil
 }
 
 func CommandWithGzip(ctx context.Context, cmd, filename string) error {
