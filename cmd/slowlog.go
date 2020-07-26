@@ -86,7 +86,7 @@ Only support MySQL`,
 			}
 			defer dbcli.Close()
 
-			datadir, err := dbcli.GetVariable("datadir")
+			datadir, err := dbcli.GetGlobalVariable("datadir")
 			if err != nil {
 				return err
 			}

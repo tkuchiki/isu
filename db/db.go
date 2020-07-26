@@ -136,8 +136,8 @@ func (c *Client) GetTables(dbname string, reverse bool) ([]string, error) {
 	return data, nil
 }
 
-func (c *Client) GetVariable(name string) (string, error) {
-	_sql := fmt.Sprintf("SHOW VARIABLES LIKE '%s'", name)
+func (c *Client) GetGlobalVariable(name string) (string, error) {
+	_sql := fmt.Sprintf("SHOW GLOBAL VARIABLES LIKE '%s'", name)
 
 	cols, err := c.execute(_sql)
 	if err != nil {
