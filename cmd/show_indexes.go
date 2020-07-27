@@ -31,8 +31,8 @@ func NewShowIndexesCmd() *cobra.Command {
 	// showIndexesCmd represents the show_indexes command
 	var showIndexesCmd = &cobra.Command{
 		Use:   "show_indexes",
-		Short: "Show indexes for all tables.",
-		Long: `Show indexes for all tables.
+		Short: "Show indexes for all tables",
+		Long: `Show indexes for all tables
 
 Only support MySQL`,
 		RunE: func(cmd *cobra.Command, args []string) error {

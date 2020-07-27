@@ -31,10 +31,8 @@ func NewDbBackupCmd() *cobra.Command {
 	// dbBackupCmd represents the db_backup command
 	var dbBackupCmd = &cobra.Command{
 		Use:   "db_backup",
-		Short: "Execute the mysqldump.",
-		Long: `Execute the mysqldump.
-
-`,
+		Short: "Execute the mysqldump",
+		Long:  `Execute the mysqldump`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			dbuser, err := cmd.Flags().GetString("dbuser")
 			if err != nil {
