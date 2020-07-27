@@ -126,7 +126,7 @@ Only support MySQL`,
 	explainQueryCmd.Flags().StringP("dbname", "", "", "Database name")
 	explainQueryCmd.Flags().StringP("dbsock", "", "", "Database socket")
 	explainQueryCmd.Flags().IntP("dbport", "", 3306, "Database port")
-	explainQueryCmd.Flags().StringP("query", "", "", "SQL")
+	explainQueryCmd.Flags().StringP("query", "", "", "SQL (Read from stdin when omitted)")
 	explainQueryCmd.Flags().DurationP("timeout", "", time.Minute*10, "Timeout")
 
 	return explainQueryCmd
