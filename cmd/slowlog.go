@@ -24,8 +24,8 @@ func NewSlowlogCmd() *cobra.Command {
 	// slowlogCmd represents the slowlog command
 	var slowlogCmd = &cobra.Command{
 		Use:   "slowlog",
-		Short: "Enable/Disable slowlog.",
-		Long: `Enable/Disable slowlog.
+		Short: "Enable/Disable slowlog",
+		Long: `Enable/Disable slowlog
 
 Only support MySQL`,
 	}

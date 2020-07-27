@@ -17,12 +17,12 @@ Usage:
 
 Available Commands:
   code_backup   Create a backup of directory
-  db_backup     Execute the mysqldump.
-  explain_query Execute the EXPLAIN and EXPLAIN ANALYZE.
+  db_backup     Execute the mysqldump
+  explain_query Execute the EXPLAIN and EXPLAIN ANALYZE
   help          Help about any command
-  show_indexes  Show indexes for all tables.
-  slowlog       Enable/Disable slowlog.
-  table_rows    Outputs the number of records in all tables.
+  show_indexes  Show indexes for all tables
+  slowlog       Enable/Disable slowlog
+  table_rows    Outputs the number of records in all tables
   version       Show version
 
 Flags:
@@ -35,7 +35,7 @@ Use "isu [command] --help" for more information about a command.
 
 ```console
 $ isu db_backup --help
-Execute the mysqldump.
+Execute the mysqldump
 
 Usage:
   isu db_backup [flags]
@@ -70,7 +70,9 @@ Flags:
 
 ```console
 $ isu table_rows --help
-Outputs the number of records in all tables.
+Outputs the number of records in all tables
+
+Only support MySQL
 
 Usage:
   isu table_rows [flags]
@@ -88,8 +90,8 @@ Flags:
 ```
 
 ```console
-$ ./isu show_indexes --help
-Show indexes for all tables.
+$ isu show_indexes --help
+Show indexes for all tables
 
 Only support MySQL
 
@@ -110,7 +112,7 @@ Flags:
 
 ```console
 $ isu explain_query --help
-Execute the EXPLAIN and EXPLAIN ANALYZE.
+Execute the EXPLAIN and EXPLAIN ANALYZE
 
 Only support MySQL
 
@@ -131,7 +133,7 @@ Flags:
 
 ```console
 $ isu slowlog on --help
-Enable slowlog.
+Enable slowlog
 
 Only support MySQL
 
@@ -151,7 +153,7 @@ Global Flags:
       --persist SET PERSIST   Use SET PERSIST
 
 $ isu slowlog off --help
-Disable slowlog.
+Disable slowlog
 
 Only support MySQL
 

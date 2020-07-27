@@ -32,8 +32,8 @@ func NewExplainQueryCmd() *cobra.Command {
 	// explainQueryCmd represents the explain_query command
 	var explainQueryCmd = &cobra.Command{
 		Use:   "explain_query",
-		Short: "Execute the EXPLAIN and EXPLAIN ANALYZE.",
-		Long: `Execute the EXPLAIN and EXPLAIN ANALYZE.
+		Short: "Execute the EXPLAIN and EXPLAIN ANALYZE",
+		Long: `Execute the EXPLAIN and EXPLAIN ANALYZE
 
 Only support MySQL`,
 		RunE: func(cmd *cobra.Command, args []string) error {

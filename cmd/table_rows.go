@@ -28,8 +28,8 @@ func NewTableRowsCmd() *cobra.Command {
 	// tableRowsCmd represents the tableRows command
 	var tableRowsCmd = &cobra.Command{
 		Use:   "table_rows",
-		Short: "Outputs the number of records in all tables.",
-		Long: `Outputs the number of records in all tables.
+		Short: "Outputs the number of records in all tables",
+		Long: `Outputs the number of records in all tables
 
 Only support MySQL`,
 		RunE: func(cmd *cobra.Command, args []string) error {
